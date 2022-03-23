@@ -51,11 +51,15 @@ else
     echo -e "\t Successfully reached $fhirServer"
 fi
 
-echo "Installing FHIR package '$packageName' using version $packageVersion"
-$fhirCommand install $packageName $packageVersion | awk '{ print "\t" $0 }'
+packageNameWithoutDash=$(echo "$packageName" | sed -e "s/-/@/") # Temporary fix for FT 2.1.1, packages containing an '-' will show up with '@' in the cache
+
+$fhirCommand cache | grep -q $packageNameWithoutDash@$packageVersion
+if [ $? -eq 1 ]; then
+    echo "Not found FHIR package '$packageName' using version $packageVersion, installing..."
+    $fhirCommand install $packageName $packageVersion | awk '{ print "\t" $0 }'
+fi
 
 echo "Checking if FHIR '$packageName' using version $packageVersion was successfully installed"
-packageNameWithoutDash=$(echo "$packageName" | sed -e "s/-/@/") # Temporary fix for FT 2.1.1, packages containing an '-' will show up with '@' in the cache
 $fhirCommand cache | grep -q $packageNameWithoutDash@$packageVersion
 if [ $? -eq 1 ]; then
     exit_with_message "Failed to install package $packageName using version $packageVersion"

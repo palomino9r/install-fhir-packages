@@ -4,7 +4,7 @@ Upload the conformance resources bundled in a FHIR package to any FHIR server us
 
 ## Quickstart
 
-Simply run ``./install-fhir-packages.sh`` within a working directory. 
+Simply run ``./install_fhir_packages.sh`` within a working directory. 
 All FHIR packages will be installed locally in this folder before being uploaded to a specified FHIR server.
 
 ```
